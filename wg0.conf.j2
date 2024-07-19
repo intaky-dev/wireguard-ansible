@@ -1,0 +1,11 @@
+[Interface]
+PrivateKey = {{ server_private_key }}
+Address = {{ server_ip }}
+ListenPort = {{ listen_port }}
+#DNS = {{ dns_servers }}
+PostUp = iptables -A FORWARD -i %i -d {{ local_ip }} -j ACCEPT; iptables -A FORWARD -o %i -s {{ local_ip }} -j ACCEPT; iptables -t nat -A POSTROUTING -s {{ local_ip }} -o {{ tables_interface }} -j MASQUERADE
+PostDown =  iptables -D FORWARD -i %i -d {{ local_ip }} -j ACCEPT; iptables -D FORWARD -o %i -s {{ local_ip }} -j ACCEPT; iptables -t nat -D POSTROUTING -s {{ local_ip }} -o {{ tables_interface }} -j MASQUERADE 
+[Peer]
+PublicKey = {{ client_public_key }}
+AllowedIPs = {{ client_ip }}
+

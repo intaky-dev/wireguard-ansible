@@ -1,0 +1,81 @@
+---
+- name: Install and configure WireGuard on Raspberry Pi
+  hosts: localhost
+  connection: local
+  become: yes
+
+  vars:
+    wireguard_interface: wg0
+    tables_interface: eth0
+    server_ip: "10.0.0.1/24"
+    client_ip: "10.0.0.2/32"
+    listen_port: 51820
+    dns_servers: "10.42.0.1 , 8.8.8.8"
+    #post_up:
+    #post_down: 
+    local_ip: "10.42.0.0/24"
+    end_point: "INSERT YOUR ENDPOINT HERE"
+
+  tasks:
+    - name: Update apt cache and upgrade packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Install WireGuard
+      apt:
+        name: wireguard
+        state: present
+
+    - name: Ensure /etc/wireguard directory exists
+      file:
+        path: /etc/wireguard
+        state: directory
+        mode: 0700
+
+    - name: Generate server private key
+      command: wg genkey
+      register: server_private_key
+
+    - name: Generate server public key
+      command: "echo {{ server_private_key.stdout }} | wg pubkey"
+      register: server_public_key
+    
+    - name: Generate client private key
+      command: wg genkey
+      register: client_private_key
+
+    - name: Generate client public key
+      command: "echo {{ client_private_key.stdout }} | wg pubkey"
+      register: client_public_key
+
+    - name: Create WireGuard Server configuration file
+      template:
+        dest: /etc/wireguard/wg0.conf
+        src: wg0.conf.j2
+        mode: 0600
+    
+    - name: Create WireGuard Client configuration file
+      template:
+        dest: /etc/wireguard/peer.conf
+        src: client.wg0.conf.j2
+        mode: 0600
+  
+    - name: Enable IP forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        state: present
+        reload: yes
+
+    - name: Start and enable WireGuard
+      systemd:
+        name: wg-quick@{{ wireguard_interface }}
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: restart wireguard
+      systemd:
+        name: wg-quick@{{ wireguard_interface }}
+        state: restarted
