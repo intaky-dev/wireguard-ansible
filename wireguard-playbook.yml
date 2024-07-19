@@ -38,7 +38,7 @@
       register: server_private_key
 
     - name: Generate server public key
-      command: "echo {{ server_private_key.stdout }} | wg pubkey"
+      shell: "echo {{ server_private_key.stdout }} | wg pubkey"
       register: server_public_key
     
     - name: Generate client private key
@@ -46,7 +46,7 @@
       register: client_private_key
 
     - name: Generate client public key
-      command: "echo {{ client_private_key.stdout }} | wg pubkey"
+      shell: "echo {{ client_private_key.stdout }} | wg pubkey"
       register: client_public_key
 
     - name: Create WireGuard Server configuration file
