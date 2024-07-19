@@ -9,6 +9,10 @@ Verify the installation by running:
 ansible --version
 This should display the version of Ansible installed on your machine.
 
+Clone the repo into your machine
+
+then run the ansible playbook with
+ansible-playbook wireguard-playbook.yml
 
 replace your variables in the wireguard-playbook.yml file 
   vars:
