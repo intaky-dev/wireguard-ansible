@@ -1,18 +1,23 @@
 ---
-- name: Install and configure WireGuard on Raspberry Pi
+- name: Install and configure WireGuard Debian/Ubuntu
   hosts: localhost
   connection: local
   become: yes
 
   vars:
+    users: 
+      - user: "user1"
+        ip: "10.0.0.2/32"
+      - user: "user2"
+        ip: "10.0.0.3/32"
+      - user: "user3"
+        ip: "10.0.0.4/32"  
     wireguard_interface: wg0
     tables_interface: eth0
     server_ip: "10.0.0.1/24"
     client_ip: "10.0.0.2/32"
     listen_port: 51820
     dns_servers: "10.42.0.1 , 8.8.8.8"
-    #post_up:
-    #post_down: 
     local_ip: "10.42.0.0/24"
     end_point: "INSERT YOUR ENDPOINT HERE"
 
@@ -41,13 +46,6 @@
       shell: "echo {{ server_private_key.stdout }} | wg pubkey"
       register: server_public_key
     
-    - name: Generate client private key
-      command: wg genkey
-      register: client_private_key
-
-    - name: Generate client public key
-      shell: "echo {{ client_private_key.stdout }} | wg pubkey"
-      register: client_public_key
 
     - name: Check if Wireguard Server config file exists
       stat:
@@ -61,18 +59,17 @@
         mode: 0600
       when: not wg0_conf.stat.exists
 
-    - name: Check if Wireguard Client config file exists
-      stat:
-        path: /etc/wireguard/peer.conf
-      register: client_wg0_conf
-
-    - name: Create WireGuard Client configuration file
-      template:
-        dest: /etc/wireguard/peer.conf
-        src: client.wg0.conf.j2
-        mode: 0600
-      when: not client_wg0_conf.stat.exists
-  
+    - name:  Multiple User Generation
+      include_tasks: user-generation.yml
+      vars:
+        user: "{{ item.user }}"
+        ip: "{{ item.ip }}"
+        publicKey: "{{ server_public_key.stdout }}"
+        allowedIPs: "{{ local_ip }}"
+        endPoint: "{{ end_point }}:{{ listen_port }}"
+        dnsServer: "{{ dns_servers }}"
+      with_items: "{{ users }}"
+      
     - name: Enable IP forwarding
       sysctl:
         name: net.ipv4.ip_forward

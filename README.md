@@ -11,12 +11,19 @@ This should display the version of Ansible installed on your machine.
 
 
 replace your variables in the wireguard-playbook.yml file 
-vars:
-    wireguard_interface: wg0 ##default
-    tables_interface: eth0 ##default
-    server_ip: "10.0.0.1/24" ##
-    client_ip: "10.0.0.2/32" ##
-    listen_port: 51820 ##default port
+  vars:
+    users: 
+      - user: "user1"
+        ip: "10.0.0.2/32"
+      - user: "user2"
+        ip: "10.0.0.3/32"
+      - user: "user3"
+        ip: "10.0.0.4/32"  
+    wireguard_interface: wg0
+    tables_interface: eth0
+    server_ip: "10.0.0.1/24"
+    client_ip: "10.0.0.2/32"
+    listen_port: 51820
     dns_servers: "10.42.0.1 , 8.8.8.8"
     local_ip: "10.42.0.0/24"
     end_point: "INSERT YOUR ENDPOINT HERE"

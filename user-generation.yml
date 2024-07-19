@@ -1,0 +1,43 @@
+- name: Generate client private key
+  command: wg genkey
+  register: client_private_key
+
+- name: Generate client public key
+  shell: "echo {{ client_private_key.stdout }} | wg pubkey"
+  register: client_public_key
+
+- name: Check if Wireguard Client config file exists
+  stat:
+    path: /etc/wireguard/{{ user }}.conf
+  register: client_wg0_conf
+
+- name: Create WireGuard Client configuration file
+  template:
+    dest: /etc/wireguard/{{ user }}.conf
+    src: client.wg0.conf.j2
+    mode: 0600
+  when: not client_wg0_conf.stat.exists
+
+- name: Add Comment
+  lineinfile:
+    path: /etc/wireguard/wg0.conf
+    line: '# This is {{ user }}'
+    insertafter: EOF
+
+- name: Add Peer
+  lineinfile:
+    path: /etc/wireguard/wg0.conf
+    line: '[Peer]'
+    insertafter: EOF
+
+- name: Add Public Key
+  lineinfile:
+    path: /etc/wireguard/wg0.conf
+    line: 'PublicKey = {{ client_public_key.stdout }}'
+    insertafter: EOF
+
+- name: Add Allowed IPs
+  lineinfile:
+    path: /etc/wireguard/wg0.conf
+    line: 'AllowedIPs = {{ ip }}'
+    insertafter: EOF

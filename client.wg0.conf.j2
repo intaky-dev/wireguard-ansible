@@ -1,10 +1,10 @@
 [Interface]
 PrivateKey = {{ client_private_key.stdout }}
 Address = {{ client_ip }}
-DNS = {{ dns_servers }}
+DNS = {{ dnsServer }}
 
 [Peer]
-PublicKey = {{ server_public_key.stdout }}
-AllowedIPs = {{ local_ip }}
-EndPoint = {{ end_point }}:{{ listen_port }}
+PublicKey = {{ publicKey }}
+AllowedIPs = {{ allowedIPs }}
+EndPoint = {{ endPoint }}
 PersistentKeepAlive = 25
