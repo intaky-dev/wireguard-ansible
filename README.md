@@ -10,7 +10,8 @@ For Red Hat/CentOS/Fedora:
 ``` 
 sudo yum install ansible 
 ```
-For openSUSE: ``` 
+For openSUSE: 
+``` 
 sudo zypper install ansible 
 ```
 Verify the installation by running:
