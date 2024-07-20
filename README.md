@@ -1,7 +1,8 @@
 # Wireguard for Ansible
 ## Install ansible
 Open a terminal on your Linux machine.
-Install Ansible using your package manager:
+Install Ansible using your package manager: 
+/
 For Ubuntu/Debian: 
 ``` 
 sudo apt-get install ansible 
