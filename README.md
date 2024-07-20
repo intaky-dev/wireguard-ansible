@@ -2,17 +2,29 @@
 ## Install ansible
 Open a terminal on your Linux machine.
 Install Ansible using your package manager:
-For Ubuntu/Debian: ``` sudo apt-get install ansible ```
-For Red Hat/CentOS/Fedora: ``` sudo yum install ansible ```
-For openSUSE: ``` sudo zypper install ansible ```
+For Ubuntu/Debian: ``` 
+sudo apt-get install ansible 
+```
+For Red Hat/CentOS/Fedora: ``` 
+sudo yum install ansible 
+```
+For openSUSE: ``` 
+sudo zypper install ansible 
+```
 Verify the installation by running:
-``` ansible --version ```
+``` 
+ansible --version 
+```
 This should display the version of Ansible installed on your machine.
 
 ## Clone the repo into your machine
-``` git clone https://github.com/intaky-dev/wireguard-ansible.git ```
+``` 
+git clone https://github.com/intaky-dev/wireguard-ansible.git 
+```
 ## Run the ansible playbook with
-``` ansible-playbook wireguard-playbook.yml ```
+``` 
+ansible-playbook wireguard-playbook.yml 
+```
 
 ## Replace your variables in the wireguard-playbook.yml file 
 ``` 
