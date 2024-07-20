@@ -2,10 +2,12 @@
 ## Install ansible
 Open a terminal on your Linux machine.
 Install Ansible using your package manager:
-For Ubuntu/Debian: ``` 
+For Ubuntu/Debian: 
+``` 
 sudo apt-get install ansible 
 ```
-For Red Hat/CentOS/Fedora: ``` 
+For Red Hat/CentOS/Fedora: 
+``` 
 sudo yum install ansible 
 ```
 For openSUSE: ``` 
