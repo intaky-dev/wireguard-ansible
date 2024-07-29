@@ -3,6 +3,9 @@ PrivateKey = {{ server_private_key.stdout }}
 Address = {{ server_ip }}
 ListenPort = {{ listen_port }}
 
-PostUp = iptables -A FORWARD -i %i -d {{ local_ip }} -j ACCEPT; iptables -A FORWARD -o %i -s {{ local_ip }} -j ACCEPT; iptables -t nat -A POSTROUTING -s {{ local_ip }} -o {{ tables_interface }} -j MASQUERADE
-PostDown =  iptables -D FORWARD -i %i -d {{ local_ip }} -j ACCEPT; iptables -D FORWARD -o %i -s {{ local_ip }} -j ACCEPT; iptables -t nat -D POSTROUTING -s {{ local_ip }} -o {{ tables_interface }} -j MASQUERADE 
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o {{ tables_interface }} -j MASQUERADE
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o {{ tables_interface }} -j MASQUERADE
+# PostUp = iptables -A FORWARD -i %i -d {{ local_ip }} -j ACCEPT; iptables -A FORWARD -o %i -s {{ local_ip }} -j ACCEPT; iptables -t nat -A POSTROUTING -s {{ local_ip }} -o {{ tables_interface }} -j MASQUERADE
+# PostDown =  iptables -D FORWARD -i %i -d {{ local_ip }} -j ACCEPT; iptables -D FORWARD -o %i -s {{ local_ip }} -j ACCEPT; iptables -t nat -D POSTROUTING -s {{ local_ip }} -o {{ tables_interface }} -j MASQUERADE 
 
+ 
