@@ -9,39 +9,41 @@
 - name: Check if Wireguard Client config file exists
   stat:
     path: /etc/wireguard/{{ user }}.conf
-  register: client_wg0_conf
+  register: client_wg0_conf  
 
-- name: Create WireGuard Client configuration file
-  template:
-    dest: /etc/wireguard/{{ user }}.conf
-    src: client.wg0.conf.j2
-    mode: 0600
-  when: not client_wg0_conf.stat.exists
+- block:
+  - name: Create WireGuard Client configuration file
+    template:
+      dest: /etc/wireguard/{{ user }}.conf
+      src: client.wg0.conf.j2
+      mode: 0600
+    #when: not client_wg0_conf.stat.exists
 
-- name: Add Comment
-  lineinfile:
-    path: /etc/wireguard/wg0.conf
-    line: '# This is {{ user }}'
-    insertafter: EOF
-  when: not client_wg0_conf.stat.exists
-  
-- name: Add Peer
-  lineinfile:
-    path: /etc/wireguard/wg0.conf
-    line: '[Peer]'
-    insertafter: EOF
-  when: not client_wg0_conf.stat.exists
-  
-- name: Add Public Key
-  lineinfile:
-    path: /etc/wireguard/wg0.conf
-    line: 'PublicKey = {{ client_public_key.stdout }}'
-    insertafter: EOF
-  when: not client_wg0_conf.stat.exists
-  
-- name: Add Allowed IPs
-  lineinfile:
-    path: /etc/wireguard/wg0.conf
-    line: 'AllowedIPs = {{ ip }}'
-    insertafter: EOF
+  - name: Add Comment
+    lineinfile:
+      path: /etc/wireguard/wg0.conf
+      line: '# This is {{ user }}'
+      insertafter: EOF
+    #when: not client_wg0_conf.stat.exists
+    
+  - name: Add Peer
+    lineinfile:
+      path: /etc/wireguard/wg0.conf
+      line: '[Peer]'
+      insertafter: EOF
+   # when: not client_wg0_conf.stat.exists
+    
+  - name: Add Public Key
+    lineinfile:
+      path: /etc/wireguard/wg0.conf
+      line: 'PublicKey = {{ client_public_key.stdout }}'
+      insertafter: EOF
+    #when: not client_wg0_conf.stat.exists
+    
+  - name: Add Allowed IPs
+    lineinfile:
+      path: /etc/wireguard/wg0.conf
+      line: 'AllowedIPs = {{ ip }}'
+      insertafter: EOF
+     #  when: not client_wg0_conf.stat.exists
   when: not client_wg0_conf.stat.exists
