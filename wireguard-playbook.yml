@@ -15,7 +15,6 @@
     wireguard_interface: wg0
     tables_interface: eth0
     server_ip: "10.0.0.1/24"
-    client_ip: "10.0.0.2/32"
     listen_port: 51820
     dns_servers: "10.42.0.1 , 8.8.8.8"
     local_ip: "10.42.0.0/24"
@@ -69,15 +68,10 @@
         server_private_key: "{{server_private_key_old}}"
       when: file_server_private_key.stat.exists == True
 
-    - name: Set Server Private Key Variable
-      debug: 
-        msg: "{{ server_private_key }}"
-
     - name: Generate server public key
       shell: "echo {{ server_private_key.stdout }} | wg pubkey"
       register: server_public_key
     
-
     - name: Check if Wireguard Server config file exists
       stat:
         path: /etc/wireguard/wg0.conf
