@@ -48,4 +48,7 @@ vars:
   dns_servers: "10.42.0.1 , 8.8.8.8"
   local_ip: "10.42.0.0/24"
   end_point: "INSERT YOUR ENDPOINT HERE" 
-```  
+```
+
+
+Special Thanks to namen_malk4v for mentoring
